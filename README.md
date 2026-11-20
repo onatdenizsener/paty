@@ -24,6 +24,8 @@ Retro piksel evcil hayvan oyunu (Flix Toys). Oyuncu barınaktan ilk kedisini ya 
 
 Derleme: `python3 src/build.py` → `index.html`. Uygulama için `cd app && npm ci && npm run build`.
 
+> **Durum (21 Kasım 2026):** Bundle ID `com.flixtoys.paty` kayıtlı; App Store Connect kaydı (Apple ID 6837497964) açıldı ve `app/tools/asc_web.js` ile tarayıcıdan dolduruldu: 6 dilde ad, alt başlık, açıklama, anahtar kelimeler, 36 ekran görüntüsü, kategori, yaş derecesi, inceleme bilgileri, ücretsiz fiyat, 4 IAP (fiyat, 175 ülke, inceleme görseli), Uygulama Gizliliği (yayınlandı), TestFlight bilgileri. AdMob uygulaması ve reklam birimleri `app/www/ads-config.js` içinde. GitHub Pages açık. TestFlight için eksik olan tek şey repo secret'ları.
+
 ## Önceki Flix oyunlarından alınan dersler (bu repoda baştan uygulandı)
 **Satın almalar**
 - **realOwned:** Ödeme ekranı açıkken eklentinin oluşturduğu geçici `virtual.*` işlem hiçbir şeyin kilidini açmaz. Sayılan tek şey gerçek, onaylanmış ya da bitmiş işlemdir. (Kick Up ve Jump'taki "ödemeyi kapatsan da ürün veriliyor" hatası.)
