@@ -1,0 +1,32 @@
+# Fills App Store Connect for Paty from appstore/metadata.json (bundle id, name, subtitle, categories, age rating,
+# version texts, screenshots, review notes, in-app purchases with prices and review screenshots, free price,
+# TestFlight info and an internal tester group). Safe to run again. See README "App Store Connect".
+#   gh workflow run asc-setup.yml -R onatdenizsener/paty            (all steps)
+#   gh workflow run asc-setup.yml -R onatdenizsener/paty -f only=status
+name: App Store Connect kurulum
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Only these steps (comma separated: bundle,app,info,version,screenshots,review,iaps,price,testflight,status). Empty = all'
+        required: false
+        default: ''
+jobs:
+  asc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q pyjwt cryptography
+      - name: App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+          REVIEW_FIRST_NAME: ${{ secrets.REVIEW_FIRST_NAME }}
+          REVIEW_LAST_NAME: ${{ secrets.REVIEW_LAST_NAME }}
+          REVIEW_PHONE: ${{ secrets.REVIEW_PHONE }}
+          REVIEW_EMAIL: ${{ secrets.REVIEW_EMAIL }}
+        run: |
+          [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ] || { echo "::error::APP_STORE_CONNECT_KEY_ID / _ISSUER_ID / _PRIVATE_KEY secret'ları eksik"; exit 1; }
+          if [ -n "${{ inputs.only }}" ]; then python3 app/tools/asc_setup.py --only "${{ inputs.only }}"; else python3 app/tools/asc_setup.py; fi

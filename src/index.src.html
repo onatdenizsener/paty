@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#12131f">
+<title>Paty</title>
+<style>/*FONTFACE*/</style>
+<style>
+:root{--ink:#1a1c2c;--plum:#5d275d;--red:#b13e53;--orange:#ef7d57;--yellow:#ffcd75;--lime:#a7f070;--green:#38b764;--teal:#257179;
+  --navy:#29366f;--blue:#3b5dc9;--sky:#41a6f6;--cyan:#73eff7;--white:#f4f4f4;--mist:#94b0c2;--slate:#566c86;--shadow:#333c57;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#12131f;color:var(--white);font-family:'Pixelify Sans',monospace;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+body{min-height:100vh;display:flex;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));background-image:radial-gradient(#1e2033 1px,transparent 1px);background-size:6px 6px}
+#app{width:100%;max-width:480px;display:flex;flex-direction:column;gap:10px}
+img,canvas{image-rendering:pixelated}
+
+.device{background:var(--plum);border:4px solid var(--ink);border-radius:16px 16px 34px 16px;padding:10px;
+  box-shadow:inset -6px -6px 0 #3e1a3e,inset 4px 4px 0 #7a3a7a,0 6px 0 #0b0c14}
+.top{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.lvl{display:flex;align-items:center;gap:5px;background:var(--ink);border:2px solid #000;border-radius:4px;padding:3px 7px;flex:1;min-width:0}
+.lvl img{width:16px;height:16px}
+.lvl b{font-size:14px;white-space:nowrap}
+.xp{flex:1;height:7px;background:#333c57;border:1px solid #000;min-width:30px}
+.xp i{display:block;height:100%;background:var(--yellow)}
+.chip{background:var(--ink);border:2px solid #000;padding:3px 7px;border-radius:4px;display:flex;align-items:center;gap:4px;white-space:nowrap;font-size:14px}
+.chip img{width:14px;height:14px}
+
+.screen{position:relative;border:4px solid var(--ink);border-radius:6px;overflow:hidden;background:#000}
+#room{display:block;width:100%;aspect-ratio:4/3;cursor:pointer;touch-action:manipulation}
+.scan{pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(0,0,0,.1) 3px)}
+.toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:var(--ink);color:var(--yellow);border:2px solid var(--yellow);
+  padding:3px 10px;border-radius:4px;font-size:13px;white-space:nowrap;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+
+.tabs{display:flex;gap:6px;margin-top:8px}
+.tab{flex:1;background:#3e1a3e;border:2px solid var(--ink);border-radius:4px;padding:4px;font-size:13px;text-align:center;cursor:pointer;color:var(--mist)}
+.tab.on{background:var(--yellow);color:var(--ink);font-weight:700}
+.tab.lock{opacity:.6}
+
+.talk{display:flex;gap:9px;align-items:flex-start;background:var(--white);color:var(--ink);border:3px solid var(--ink);border-radius:6px;
+  padding:8px 10px;margin-top:8px;min-height:80px;cursor:pointer;position:relative;box-shadow:3px 3px 0 var(--ink)}
+.talk.quiet{background:#d8d4c8}
+.talk canvas{width:48px;height:36px;flex:none;background:var(--cyan);border:2px solid var(--ink);border-radius:4px}
+.talk.quiet canvas{background:var(--mist)}
+.talk .who{font-weight:700;color:var(--red);font-size:13px}
+.talk.quiet .who{color:var(--slate)}
+.talk .txt{font-size:15px;line-height:1.25;min-height:38px}
+.talk .next{position:absolute;right:8px;bottom:4px;font-size:12px;animation:blink 1s steps(2) infinite}
+.choices{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.choices button{flex-direction:row;padding:5px 12px;font-size:14px}
+@keyframes blink{50%{opacity:0}}
+
+.panel{background:var(--navy);border:3px solid var(--ink);border-radius:6px;padding:9px;box-shadow:3px 3px 0 var(--ink);min-height:120px}
+.phead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.phead>img{width:46px;height:auto}
+.pname{font-weight:700;font-size:19px;line-height:1}
+.ptrait{font-size:12px;color:var(--cyan);margin-top:2px}
+.hearts{display:flex;gap:2px;margin-top:3px}
+.hearts img{width:11px;height:10px}
+.chips{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:52%}
+.pchip{width:34px;height:34px;background:var(--ink);border:2px solid #000;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.pchip img{width:26px}
+.pchip.on{border-color:var(--yellow)}
+.pchip .dot{position:absolute;right:-3px;top:-3px;width:9px;height:9px;background:var(--red);border:1px solid #000;border-radius:2px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px}
+.st{display:flex;align-items:center;gap:5px;font-size:12px}
+.st img{width:13px;height:13px;flex:none}
+.st span{width:58px;flex:none}
+.st .b{flex:1;height:9px;background:var(--ink);border:1px solid #000}
+.st .b i{display:block;height:100%}
+.pextra{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pextra button{flex:1;flex-direction:row;justify-content:center;font-size:13px;padding:5px 6px;box-shadow:0 3px 0 var(--ink);min-width:110px}
+.pextra button img{width:14px;height:14px}
+.lostbox{font-size:14px;line-height:1.35;color:var(--yellow)}
+.empty{font-size:14px;color:var(--mist);line-height:1.4;padding:6px 0}
+
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--yellow);border:3px solid var(--ink);border-radius:6px;
+  padding:7px 4px;cursor:pointer;box-shadow:0 4px 0 var(--ink);display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .05s;touch-action:manipulation}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+button:disabled{opacity:.4;cursor:not-allowed}
+button img{width:22px;height:22px}
+button.c2{background:#f29bb2}button.c3{background:var(--cyan)}button.c4{background:var(--lime)}button.dark{background:var(--mist)}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.row button{font-size:12px}
+.row button img{width:18px;height:18px}
+.pulse{animation:pulse .8s ease-in-out infinite;position:relative;z-index:2}
+@keyframes pulse{0%,100%{outline:3px solid var(--yellow);outline-offset:2px}50%{outline:3px solid #fff;outline-offset:5px}}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:2px solid var(--ink);border-radius:4px;font-size:11px;padding:0 4px}
+
+.modal{position:fixed;inset:0;background:rgba(10,10,20,.78);display:none;align-items:center;justify-content:center;padding:12px;z-index:20}
+.modal.open{display:flex}
+.box{background:var(--white);color:var(--ink);border:4px solid var(--ink);border-radius:8px;width:100%;max-width:440px;max-height:92vh;overflow:auto;box-shadow:6px 6px 0 #000;padding:12px}
+.box h2{font-size:21px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.box h2 button{flex-direction:row;padding:2px 10px;font-size:13px;box-shadow:0 2px 0 var(--ink)}
+.box h3{font-size:13px;color:var(--slate);margin:10px 0 2px;text-transform:uppercase;letter-spacing:1px}
+.item{display:flex;align-items:center;gap:10px;border-bottom:2px dashed #cfcabc;padding:7px 0}
+.item>img{width:42px;height:42px;background:#e6e0d0;border:2px solid var(--ink);border-radius:4px;object-fit:contain;padding:3px;flex:none}
+.item .d{flex:1;font-size:13px;line-height:1.25}
+.item .d b{font-size:15px}
+.item .d small{color:var(--slate)}
+.item button{flex-direction:row;min-width:74px;justify-content:center;font-size:13px}
+.item button img{width:12px;height:12px}
+.prog{height:8px;background:#cfcabc;border:1px solid var(--ink);margin-top:4px}
+.prog i{display:block;height:100%;background:var(--green)}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pick3{grid-template-columns:1fr 1fr 1fr}
+.pc{border:3px solid var(--ink);border-radius:6px;background:#e6e0d0;padding:8px;text-align:center;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.pc.on{background:var(--yellow);outline:3px solid var(--red)}
+.pc img{width:80%;max-width:110px;margin:6px auto;display:block}
+.pc b{font-size:16px;display:block}
+.pc small{font-size:12px;color:var(--slate);display:block;line-height:1.2;margin-top:3px}
+.namerow{display:flex;gap:8px;margin-top:8px}
+.namerow input{flex:1;font-family:inherit;font-size:20px;padding:6px 10px;border:3px solid var(--ink);border-radius:6px;background:#fff;color:var(--ink);min-width:0}
+.namerow button{flex-direction:row}
+.foot{display:flex;gap:8px;margin-top:12px}
+.foot button{flex:1;flex-direction:row;justify-content:center;font-size:16px}
+#park,#kick{width:100%;aspect-ratio:4/3;border:3px solid var(--ink);border-radius:4px;cursor:pointer;display:block;touch-action:none}
+.hint{margin-top:8px;font-size:15px;min-height:40px;text-align:center;line-height:1.3}
+.ad{text-align:center;font-size:18px;padding:20px 0}
+.ad .big{font-size:48px;font-weight:700;color:var(--red)}
+.note{font-size:12px;color:var(--slate);line-height:1.4;margin-top:8px}
+.dev{display:flex;gap:6px;flex-wrap:wrap}
+.dev button{flex-direction:row;font-size:12px;padding:5px 8px;box-shadow:0 3px 0 var(--ink)}
+.dev button.on{background:var(--lime)}
+
+.title{position:absolute;inset:0;background:rgba(26,28,44,.72);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:5}
+.title h1{font-size:56px;color:var(--yellow);text-shadow:3px 3px 0 var(--red),6px 6px 0 var(--ink);letter-spacing:2px;line-height:1}
+.title p{font-size:13px;color:var(--cyan)}
+.title img{width:72px;animation:hop .6s ease-in-out infinite alternate}
+@keyframes hop{to{transform:translateY(-8px)}}
+.title button{flex-direction:row;font-size:18px;padding:8px 26px}
+.hidden{display:none!important}
+.sgrid{grid-template-columns:repeat(3,1fr);gap:8px}
+.pc.sp{padding:6px 4px}.pc.sp>img{width:70%;height:54px;object-fit:contain}
+.pc.sp b{font-size:14px}.pc.locked{opacity:.45;filter:grayscale(.7);cursor:not-allowed}
+.pc.ex{background:linear-gradient(160deg,#fff2b0,#ffcd75);border-color:#8b6a1c}
+.exh{color:#b5841f!important}
+img.lk,.pc small img{width:10px;height:10px;display:inline;margin:0;vertical-align:middle}
+.exb{font-size:10px;background:var(--yellow);color:var(--ink);padding:1px 4px;border-radius:3px;vertical-align:middle;border:1px solid #000}
+.rar{display:inline-block;font-size:10px;color:var(--ink);padding:0 4px;border-radius:3px;border:1px solid #000;font-weight:700;line-height:14px}
+.gembar{display:flex;align-items:center;gap:6px;background:#e6e0d0;border:2px solid var(--ink);border-radius:6px;padding:6px 8px;font-size:15px}
+.gembar img{width:16px;height:16px}.gembar button{margin-left:auto;flex-direction:row;padding:3px 10px;font-size:13px;box-shadow:0 2px 0 var(--ink)}
+.pc small img{width:10px;height:10px;display:inline;margin:0;vertical-align:middle}
+.chip{padding:3px 5px}
+.splash{position:fixed;inset:0;z-index:50;background:#12131f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:opacity .4s}
+.splash.out{opacity:0;pointer-events:none}
+.splash b{font-size:30px;color:#e22511;letter-spacing:3px;text-shadow:3px 3px 0 #000}
+.splash small{color:var(--mist);font-size:14px;letter-spacing:4px}
+.legal{font-size:13px;line-height:1.45;color:var(--ink)}.legal h4{font-size:15px;margin:10px 0 3px}.legal p{margin-bottom:6px}
+.setrow{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.setrow button{flex:1;flex-direction:row;justify-content:center;font-size:13px;padding:6px;box-shadow:0 3px 0 var(--ink);min-width:120px}
+.ver{font-size:11px;color:var(--slate);text-align:center;margin-top:10px}
+button:focus{outline:none}
+</style>
+</head>
+<body>
+<div class="splash" id="splash"><small>FLIX TOYS</small><b>presents</b></div>
+<div id="app">
+  <div class="device">
+    <div class="top">
+      <div class="lvl"><img id="icStar" alt=""><b id="hLvl">Sv 1</b><div class="xp"><i id="hXp" style="width:0"></i></div></div>
+      <span class="chip" id="hTime">Gün 1 · 08:00</span>
+      <span class="chip"><img id="icCoin" alt=""><b id="hCoins">0</b></span>
+      <span class="chip"><img id="icGem" alt=""><b id="hGems">0</b></span>
+    </div>
+    <div class="screen">
+      <canvas id="room" width="160" height="120"></canvas>
+      <div class="scan"></div>
+      <div class="toast" id="toast"></div>
+      <div class="title" id="title">
+        <img id="titleImg" alt="">
+        <h1>PATY</h1>
+        <p>Bir dost sahiplen. Ona iyi bak. Onu kaybetme.</p>
+        <button id="bStart">Başla</button>
+      </div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div class="talk" id="talk">
+      <canvas id="face" width="16" height="12"></canvas>
+      <div style="flex:1;min-width:0"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="choices" id="choices"></div></div>
+      <div class="next" id="next">▼</div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="actions">
+    <button id="aFeed"><img data-ic="bowl" alt="">Besle</button>
+    <button id="aPlay" class="c2"><img data-ic="ball" alt="">Oyna</button>
+    <button id="aWash" class="c3"><img data-ic="drop" alt="">Yıka</button>
+    <button id="aSleep" class="c4"><img data-ic="zzz" alt=""><span>Uyut</span></button>
+  </div>
+  <div class="row">
+    <button id="bShop"><img data-ic="coin" alt="">Mağaza</button>
+    <button id="bTasks" class="c3"><img data-ic="list" alt="">Görevler</button>
+    <button id="bKick" class="c2"><img data-ic="kball" alt="">Flix Topu</button>
+    <button id="bSet" class="dark"><img data-ic="gear" alt="">Ayarlar</button>
+  </div>
+</div>
+
+<div class="modal" id="mShop"><div class="box"><h2>Mağaza <button data-close>Kapat</button></h2><div id="shopList"></div></div></div>
+<div class="modal" id="mTasks"><div class="box"><h2>Günün görevleri <button data-close>Kapat</button></h2><div id="taskList"></div></div></div>
+<div class="modal" id="mAdopt"><div class="box"><h2><span id="adTitle">Barınak</span> <button data-close id="adClose">Kapat</button></h2><div id="adBody"></div></div></div>
+<div class="modal" id="mSearch"><div class="box"><h2><span id="sTitle">Ara</span> <button data-close>Vazgeç</button></h2>
+  <canvas id="park" width="160" height="120"></canvas><div class="hint" id="sHint"></div></div></div>
+<div class="modal" id="mKick"><div class="box"><h2>Flix Topu <button data-close id="kClose">Kapat</button></h2>
+  <canvas id="kick" width="160" height="120"></canvas><div class="hint" id="kHint"></div></div></div>
+<div class="modal" id="mAd"><div class="box"><div class="ad">Reklam (demo)<div class="big" id="adCount">3</div>Ödül: 30 altın</div></div></div>
+<div class="modal" id="mIap"><div class="box"><h2>Elmas paketleri <button data-close>Kapat</button></h2><div id="iapBody"></div></div></div>
+<div class="modal" id="mLegal"><div class="box"><h2>Yasal Bilgiler <button data-close>Kapat</button></h2><div class="legal" id="legalBody"></div></div></div>
+<div class="modal" id="mSet"><div class="box"><h2>Ayarlar <button data-close>Kapat</button></h2><div id="setBody"></div></div></div>
+
+<script>
+/*GAME*/
+</script>
+</body>
+</html>

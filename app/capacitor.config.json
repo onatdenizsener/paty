@@ -1,0 +1,17 @@
+{
+  "appId": "com.flixtoys.paty",
+  "appName": "Paty",
+  "webDir": "www",
+  "backgroundColor": "#12131f",
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": false,
+    "backgroundColor": "#12131f",
+    "webContentsDebuggingEnabled": false,
+    "preferredContentMode": "mobile",
+    "allowsLinkPreview": false
+  },
+  "plugins": {
+    "LocalNotifications": { "iconColor": "#e22511" }
+  }
+}

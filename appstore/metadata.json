@@ -1,0 +1,45 @@
+{
+  "bundleId": "com.flixtoys.paty",
+  "sku": "paty1",
+  "primaryLocale": "tr",
+  "version": "1.0",
+  "copyright": "2026 Flix Toys",
+  "categories": {"primary": "GAMES", "sub1": "GAMES_SIMULATION", "sub2": "GAMES_CASUAL"},
+  "contentRights": "DOES_NOT_USE_THIRD_PARTY_CONTENT",
+  "urls": {
+    "support": "https://onatdenizsener.github.io/paty/destek.html",
+    "marketing": "https://flixgamestudios.com",
+    "privacy": "https://onatdenizsener.github.io/paty/gizlilik.html"
+  },
+  "localizations": {
+    "tr": {
+      "name": "Paty: Retro Evcil Hayvan",
+      "subtitle": "Besle, yıka, oyna, kaybetme!",
+      "promotionalText": "Barınağa nadir bir Sfenks kedisi geldi! Retro piksel evinde dostlarını besle, yıka, sev. İhmal edersen kapıdan kaçarlar, 24 saatte bulman gerekir.",
+      "keywords": "evcil hayvan,sanal hayvan,tamagotchi,kedi,köpek,piksel,retro,barınak,besleme,egzotik,balık,kuş",
+      "description": "Paty, retro piksel dünyasında geçen bir evcil hayvan oyunu. Barınaktan ilk dostunu sahiplen, ona bir isim ver ve evini birlikte kur.\n\nDOSTLARIN SENİ BEKLİYOR\nZaman gerçek saatle akar, sen yokken de. Dostların acıkır, kirlenir, uykuları gelir. Besle, yıka, oyna, sev. Her birinin kendi huyu var: nazlı, obur, uykucu, meraklı...\n\nFLIX HEP YANINDA\nRehberin Flix odaya yürüyerek gelir. Besle dersen mamayı o koyar, Yıka dersen süngeriyle gelir, Oyna dersen top atar. Bir dostun mutsuzsa ilk o haber verir.\n\nİHMAL EDERSEN KAÇARLAR\nUzun süre ilgisiz kalan dost kapıya bakmaya başlar, sonra çekip gider. Kapıya kayıp ilanı asılır ve onu 24 saat içinde mahallede araman gerekir. Bulamazsan anısı duvarda kalır.\n\nBARINAKTA NADİR CİNSLER\nBarınağa her gün yeni dostlar gelir. Tekir, Golden ve Hollanda tavşanı sık görülür; Sfenks, Husky, Siyam nadirdir; Van kedisi, Dalmaçyalı ve Ara papağanı efsanevidir. Nadir biri gelince Flix haber verir.\n\nKEDİ, KÖPEK VE FAZLASI\nSeviye atladıkça hamster, akvaryum balıkları, kafeste uçan muhabbet kuşları, tavşan ve sincap gelir. Egzotik dükkanda kirpi, fennek tilkisi, bukalemun, tarantula, mısır yılanı, bambu köpek balığı ve kızıl panda seni bekler.\n\nEVİNİ BÜYÜT\nSalon, akvaryum, teraryum, kuş kafesi ve bahçe. Oyuncaklar al: koşu çarkı, tırmalama direği, Flix peluş... Dostların birbiriyle oynar, bazen de kavga eder.\n\nHER GÜN YENİ GÖREVLER\nGünlük görevleri tamamla, Flix Topu mini oyununda rekor kır, altın ve elmas kazan.\n\nOyun ücretsizdir. İsteğe bağlı uygulama içi satın almalar (elmas paketleri, Reklamsız) ve reklamlar içerir. İnternet olmadan da oynanır.",
+      "whatsNew": "İlk sürüm!",
+      "reviewNotes": "Paty is a single-player virtual pet game. No account or login is needed.\n\nHOW TO TEST:\n1. Tap Başla (Start). Flix, the guide, walks in and runs a short tutorial: adopt a cat or a dog at the shelter, then Besle (Feed), pet it, Oyna (Play) and buy a first toy in Mağaza (Shop).\n2. In-app purchases: Mağaza (Shop) > Elmas paketleri (Gem packs). Gems are consumable (paty_gems_50 / 120 / 300); 'Reklamsız' (paty_noads) is non-consumable and removes interstitial ads. 'Satın alımları geri yükle' (Restore Purchases) is in the gem store and in Ayarlar (Settings).\n3. Gems are spent in Mağaza > Egzotik dükkan (exotic pets, unlocks at player level 4). Every level-up and every daily task also gives gems for free.\n4. Ads (Google AdMob): a rewarded ad only when the player taps 'Reklam izle' in the shop or for an extra try in the search mini-game; occasional interstitials only after a mini-game ends, never during the tutorial. Google's consent message (EEA/UK/CH) is shown first, then Apple's App Tracking Transparency prompt, then ads start. 'Gizlilik Seçenekleri' (Privacy Options) appears in Settings where Google requires it.\n5. Local notifications are optional and only requested after the tutorial, with an explanation first.\n6. The game simulates real time. A hidden tester panel (tap the version text in Settings 7 times) can speed time up; it cannot grant coins or gems.\n\nThe game UI is in Turkish."
+    },
+    "en-US": {
+      "name": "Paty: Retro Pixel Pets",
+      "subtitle": "Feed, wash, play, don't lose!",
+      "promotionalText": "A rare Sphynx cat just arrived at the shelter! Feed, wash and cuddle your buddies in a retro pixel home. Neglect them and they run away.",
+      "keywords": "virtual pet,tamagotchi,cat,dog,pixel,retro,pet care,shelter,exotic,fish,bird,hamster,cute",
+      "description": "Paty is a virtual pet game in a retro pixel world. Adopt your first buddy at the shelter, give it a name and build a home together.\n\nYOUR BUDDIES ARE WAITING\nTime passes in real time, even while you are away. Your pets get hungry, dirty and sleepy. Feed, wash, play and cuddle. Each one has its own personality: picky, greedy, sleepy, curious...\n\nFLIX IS ALWAYS THERE\nYour guide Flix walks into the room. Tap Feed and he fills the bowl, tap Wash and he comes with a sponge, tap Play and he throws a ball. If a buddy is unhappy, he tells you first.\n\nNEGLECT THEM AND THEY RUN\nA buddy left alone too long starts staring at the door, then leaves. A lost poster goes up and you have 24 hours to search the neighbourhood.\n\nRARE BREEDS AT THE SHELTER\nNew buddies arrive every day. Some are common, Sphynx, Husky and Siamese are rare, and the Van cat, Dalmatian and Macaw are legendary. Flix lets you know when a rare one shows up.\n\nCATS, DOGS AND MORE\nLevel up to meet hamsters, aquarium fish, budgies that fly around the room, rabbits and squirrels. The Exotic shop has a hedgehog, fennec fox, chameleon, tarantula, corn snake, bamboo shark and red panda.\n\nGROW YOUR HOME\nLiving room, aquarium, terrarium, bird cage and garden. Buy toys and watch your pets play together, or squabble.\n\nNote: the game is currently in Turkish.\n\nFree to play. Contains optional in-app purchases (gem packs, No Ads) and ads. Plays offline.",
+      "whatsNew": "First release!"
+    }
+  },
+  "iaps": [
+    {"productId": "paty_gems_50",  "type": "CONSUMABLE",     "refName": "Gems 50",  "priceTRY": 49.99,  "priceUSD": 0.99,
+     "tr": {"name": "50 Elmas",  "description": "Egzotik dostlar için 50 elmas"}, "en-US": {"name": "50 Gems",  "description": "50 gems for exotic pets"}},
+    {"productId": "paty_gems_120", "type": "CONSUMABLE",     "refName": "Gems 120", "priceTRY": 99.99,  "priceUSD": 1.99,
+     "tr": {"name": "120 Elmas", "description": "Egzotik dostlar için 120 elmas"}, "en-US": {"name": "120 Gems", "description": "120 gems for exotic pets"}},
+    {"productId": "paty_gems_300", "type": "CONSUMABLE",     "refName": "Gems 300", "priceTRY": 199.99, "priceUSD": 3.99,
+     "tr": {"name": "300 Elmas", "description": "Egzotik dostlar için 300 elmas"}, "en-US": {"name": "300 Gems", "description": "300 gems for exotic pets"}},
+    {"productId": "paty_noads",    "type": "NON_CONSUMABLE", "refName": "No Ads",   "priceTRY": 79.99,  "priceUSD": 1.99,
+     "tr": {"name": "Reklamsız", "description": "Ara reklamları kalıcı olarak kaldırır"}, "en-US": {"name": "No Ads", "description": "Removes interstitial ads for good"}}
+  ],
+  "iapReviewNote": "Open Mağaza (Shop) > Elmas paketleri (Gem packs). Gems are spent in Mağaza > Egzotik dükkan. 'Reklamsız' removes interstitial ads and can be restored with 'Satın alımları geri yükle'.",
+  "testflight": {"feedbackEmail": "flixofficial2025@gmail.com", "description": "Paty: retro pixel virtual pet game by Flix Toys. Try the tutorial, adopt pets, test purchases with a Sandbox account."}
+}
