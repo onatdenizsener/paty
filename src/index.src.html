@@ -152,7 +152,9 @@ img.lk,.pc small img{width:10px;height:10px;display:inline;margin:0;vertical-ali
 .setrow{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.setrow button{flex:1;flex-direction:row;justify-content:center;font-size:13px;padding:6px;box-shadow:0 3px 0 var(--ink);min-width:120px}
 .ver{font-size:11px;color:var(--slate);text-align:center;margin-top:10px}
 button:focus{outline:none}
+.langs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:300px}.langs button{flex-direction:row;font-size:11px;padding:2px 7px;box-shadow:0 2px 0 var(--ink)}
 </style>
+<script src="i18n.js"></script>
 </head>
 <body>
 <div class="splash" id="splash"><small>FLIX TOYS</small><b>presents</b></div>
@@ -173,12 +175,13 @@ button:focus{outline:none}
         <h1>PATY</h1>
         <p>Bir dost sahiplen. Ona iyi bak. Onu kaybetme.</p>
         <button id="bStart">Başla</button>
+        <div class="langs" id="titleLangs" data-noi18n></div>
       </div>
     </div>
     <div class="tabs" id="tabs"></div>
     <div class="talk" id="talk">
       <canvas id="face" width="16" height="12"></canvas>
-      <div style="flex:1;min-width:0"><div class="who" id="who"></div><div class="txt" id="txt"></div><div class="choices" id="choices"></div></div>
+      <div style="flex:1;min-width:0"><div class="who" id="who" data-noi18n></div><div class="txt" id="txt" data-noi18n></div><div class="choices" id="choices"></div></div>
       <div class="next" id="next">▼</div>
     </div>
   </div>

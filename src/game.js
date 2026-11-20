@@ -4,6 +4,41 @@ const VERSION='1.0';
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
 const NAT=()=>window.FlixNative||null;
 const haptic=ms=>{try{const n=NAT();if(n&&n.haptic)n.haptic(ms);}catch(e){}};
+// ================= LANGUAGES =================
+// The game is written in Turkish (default). Other languages translate the finished text: exact phrases and patterns
+// from src/i18n.js (window.PATY_I18N), at the text sinks (Flix's speech, toasts, canvas) and on every DOM text node.
+const LANGS=[['tr','Türkçe'],['en','English'],['ar','العربية'],['fr','Français'],['de','Deutsch'],['es','Español']];
+let LANG='tr';try{const l=localStorage.getItem('paty_lang');if(LANGS.some(x=>x[0]===l))LANG=l;}catch(e){}
+const I18N=window.PATY_I18N||{words:{},pats:[]};
+const LI={en:0,ar:1,fr:2,de:3,es:4}[LANG];
+const PATS=(I18N.pats||[]).map(([src,...o])=>[new RegExp('^'+src+'$'),o]);
+const trCache=new Map(),TR_OUT=new Set(),MISS=new Set(),TR_DONE=new WeakMap();
+function tr(s){if(LANG==='tr'||s==null)return s;s=String(s);if(trCache.has(s))return trCache.get(s);const r=tr0(s,true);trCache.set(s,r);if(r!==s)TR_OUT.add(r.trim());return r;}
+function trq(s){if(LANG==='tr'||!s)return s;const w=I18N.words[s];if(w&&w[LI]!=null)return w[LI];return tr0(s,false);}
+function tr0(s,log){
+  const m=s.match(/^(\s*)([\s\S]*?)(\s*)$/),lead=m[1],core=m[2],trail=m[3];
+  if(!core||!/[A-Za-zÇĞİÖŞÜçğıöşü]/.test(core)||TR_OUT.has(core))return s;
+  const w=I18N.words[core];if(w&&w[LI]!=null)return lead+w[LI]+trail;
+  for(const [re,o] of PATS){const mm=core.match(re);if(mm){const out=o[LI];if(out==null)break;return lead+out.replace(/\$(\d)/g,(_,i)=>trq(mm[+i]||''))+trail;}}
+  if(core.includes(' · '))return lead+core.split(' · ').map(x=>tr0(x,log)).join(' · ')+trail;
+  const dm=core.match(/^(·\s*)([\s\S]+?)(\s*·)?$|^([\s\S]+?)(\s*·)$/);if(dm){const a=dm[1]||'',mid=dm[2]||dm[4],b=dm[3]||dm[5]||'';const t=tr0(mid,log);if(t!==mid)return lead+a+t+b+trail;}
+  if(log)MISS.add(core);return s;
+}
+function trNode(n){
+  if(LANG==='tr'||!n)return;
+  if(n.nodeType===3){const p=n.parentElement;if(!p||p.closest('[data-noi18n],script,style'))return;if(TR_DONE.get(n)===n.nodeValue)return;const v=n.nodeValue,t=tr(v);if(t!==v)n.nodeValue=t;TR_DONE.set(n,n.nodeValue);return;}
+  if(n.nodeType!==1||n.closest('[data-noi18n],script,style'))return;
+  const w=document.createTreeWalker(n,NodeFilter.SHOW_TEXT),list=[];let x;while((x=w.nextNode()))list.push(x);list.forEach(trNode);
+  n.querySelectorAll('[placeholder],[title]').forEach(e=>['placeholder','title'].forEach(a=>{if(e.hasAttribute(a))e.setAttribute(a,tr(e.getAttribute(a)));}));
+}
+function setLang(l){try{localStorage.setItem('paty_lang',l);}catch(e){}location.reload();}
+document.documentElement.lang=LANG;
+if(LANG==='ar')document.documentElement.dir='rtl';
+if(LANG!=='tr'){
+  new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')trNode(m.target);else m.addedNodes.forEach(trNode);}})
+    .observe(document.body,{subtree:true,childList:true,characterData:true});
+  trNode(document.body);
+}
 // ================= SPRITES (hand-drawn) =================
 const FX_A=["..o.....o....o..","..oo...oro..oo..","..oro..oro.oro..","..orro.orroorro.","...orrorrrorrro.","...orrrrhrrrro..","....orrrhrrro...","....orrrrrrro...","...oohhrrrrroo..","..orkkrrrrkkro..",".orreeerreeerro.","yorrekerrekerroy","yorreeerreeerroy","korrrrrrrrrrrrok"];
 const SPR={
@@ -263,7 +298,7 @@ function addXP(n){S.xp+=n;while(S.xp>=xpNeed(S.level)){S.xp-=xpNeed(S.level);S.l
   jingle([523,659,784,1046,1318]);haptic(80);toast(`SEVİYE ${S.level}! +${r} altın, +${gm} elmas`);
   const ex={2:' Artık barınaktan yeni dost sahiplenebilirsin.',3:' Bahçe mağazada!'}[S.level]||'';
   const un=UNLOCK[S.level]?` Barınakta yeni tür açıldı: ${UNLOCK[S.level]}.`:'';
-  say(`Tebrikler, ${S.level}. seviyeye ulaştın! ${r} altın ve ${gm} elmas kazandın.${ex}${un}`);if(S.shelter)fillShelter(1,true);}}
+  say(tr(`Tebrikler, ${S.level}. seviyeye ulaştın! ${r} altın ve ${gm} elmas kazandın.`)+tr(ex)+(UNLOCK[S.level]?' '+tr('Barınakta yeni tür açıldı:')+' '+tr(UNLOCK[S.level])+'.':''));if(S.shelter)fillShelter(1,true);}}
 function bond(p,n){const b=bondLv(p);p.bxp+=n*tm(p,'bondGain')*(SP[p.kind].bondX||1);if(bondLv(p)>b){toast(`${p.name} ile bağın güçlendi!`);puffAt(p,'heart',3);
   if(p.room===S.view)say(`${p.name} sana daha çok bağlandı (bağ ${bondLv(p)}/5). Bağ arttıkça sana daha sadık olur, ihmale daha uzun dayanır.`);}}
 function mkPet(kind,name,traitId,coat,breed,rar){
@@ -273,7 +308,7 @@ function mkPet(kind,name,traitId,coat,breed,rar){
 
 // ================= TOAST / PARTICLES =================
 const toastEl=document.getElementById('toast');let toastT=0;
-function toast(t){toastEl.textContent=t;toastEl.classList.add('on');toastT=2.2;}
+function toast(t){toastEl.textContent=tr(t);toastEl.classList.add('on');toastT=2.2;}
 const parts=[];
 function puff(x,y,kind,n=1,o={}){for(let i=0;i<n;i++)parts.push(Object.assign({x:x+(Math.random()*10-5),y:y-i*3,vx:0,vy:-10-Math.random()*6,g:0,t:1.2,kind,room:o.room||S.view},o));}
 function puffAt(p,kind,n){const d=dims(p);puff(p.x,p.y-d.h-4,kind,n,{room:p.room});}
@@ -422,7 +457,7 @@ function drawJobFX(){
 
 function dlgTick(dt){
   const canTalk=F.state==='idle'||(F.state==='job'&&F.job&&F.job.phase==='work');
-  if(!D.cur&&D.q.length&&canTalk){D.cur=D.q.shift();D.shown=0;D.done=0;D.choicesShown=false;D.txt=msgText(D.cur);chEl.innerHTML='';
+  if(!D.cur&&D.q.length&&canTalk){D.cur=D.q.shift();D.shown=0;D.done=0;D.choicesShown=false;D.txt=tr(msgText(D.cur));chEl.innerHTML='';
     if(D.cur.onShow)D.cur.onShow();if(D.cur.hl)document.querySelectorAll(D.cur.hl).forEach(e=>e.classList.add('pulse'));}
   if(D.cur){
     talkEl.classList.remove('quiet');whoEl.textContent='Flix';
@@ -435,9 +470,9 @@ function dlgTick(dt){
   } else {
     talkEl.classList.add('quiet');nextEl.style.visibility='hidden';
     if(F.job){const p=S.pets.find(q=>q.id===F.job.pet);whoEl.textContent='Flix';
-      txtEl.textContent=p?{feed:`${p.name} için mama hazırlıyor...`,wash:hab(p)==='tank'?'Akvaryumu temizliyor...':hab(p)==='terra'?'Teraryumu temizliyor...':hab(p)==='cage'?'Kafesi temizliyor...':`${p.name}'i yıkıyor...`,play:`${p.name} ile oynuyor...`,med:`${p.name}'e ilacını veriyor...`}[F.job.type]:'';}
-    else if(F.state==='walk'){whoEl.textContent='Flix';txtEl.textContent='Flix geliyor...';}
-    else{whoEl.textContent=S.view==='salon'?'Salon':'Bahçe';txtEl.textContent=ticker();}
+      txtEl.textContent=p?tr({feed:`${p.name} için mama hazırlıyor...`,wash:hab(p)==='tank'?'Akvaryumu temizliyor...':hab(p)==='terra'?'Teraryumu temizliyor...':hab(p)==='cage'?'Kafesi temizliyor...':`${p.name}'i yıkıyor...`,play:`${p.name} ile oynuyor...`,med:`${p.name}'e ilacını veriyor...`}[F.job.type]):'';}
+    else if(F.state==='walk'){whoEl.textContent='Flix';txtEl.textContent=tr('Flix geliyor...');}
+    else{whoEl.textContent=tr(S.view==='salon'?'Salon':'Bahçe');txtEl.textContent=ticker();}
   }
   faceC.clearRect(0,0,16,12);const talking=D.cur&&D.shown<D.txt.length&&Math.floor(F.anim*8)%2;
   if(D.cur||F.state==='walk'||F.state==='job')drawSpr(faceC,(talking?SPR.flixT:SPR.flixA).slice(6,18),MAPS.flix,0,0,false);
@@ -450,9 +485,9 @@ talkEl.addEventListener('click',e=>{const b=e.target.closest('[data-ch]');
 });
 function ticker(){
   const ps=S.pets.filter(p=>p.room===S.view&&alive(p));
-  if(!S.pets.length)return 'Ev çok sessiz...';
-  if(!ps.length)return S.view==='bahce'?'Bahçede kimse yok.':'Salonda kimse yok.';
-  return ps.map(p=>`${p.name} ${statusText(p)}`).join(' · ');
+  if(!S.pets.length)return tr('Ev çok sessiz...');
+  if(!ps.length)return tr(S.view==='bahce'?'Bahçede kimse yok.':'Salonda kimse yok.');
+  return ps.map(p=>`${p.name} ${tr(statusText(p))}`).join(' · ');
 }
 function statusText(p){
   if(p.sick)return 'hasta görünüyor';const h=hab(p);
@@ -929,7 +964,7 @@ function renderShop(){
   h+=shopItem(url(SPR.pill,MAPS.pill),'İlaç','Hasta dostu iyileştirir, Flix verir. Stokta: '+S.meds,25,'med',S.coins<25);
   h+='<h3>Oyuncaklar</h3>';
   Object.entries(TOYS).forEach(([id,t])=>{const owned=S.toys.some(x=>x.id===id);const lock=S.level<t.lv;
-    const who=t.likes==='floor'?'Tüm yer dostları':t.likes.map(k=>SP[k].n).join(', ');
+    const who=t.likes==='floor'?tr('Tüm yer dostları'):t.likes.map(k=>tr(SP[k].n)).join(', ');
     h+=shopItem(url(SPR[id],MAPS[id],4,1),t.n,`${t.d} Sevenler: ${who}.`,t.p,id,owned||lock||S.coins<t.p,owned?'Evde':lock?`<img src="${IC.lock}" alt=""> Sv ${t.lv}`:null);});
   h+='<h3>Ev</h3>';
   h+=shopItem(IC.house,'Bahçe','Dostlar odalar arasında gezer; köpek, tavşan ve tilki bahçede kazı yapar.',200,'garden',S.garden||S.level<3||S.coins<200,S.garden?'Senin':S.level<3?`<img src="${IC.lock}" alt=""> Sv 3`:null);
@@ -1201,7 +1236,7 @@ function kickTick(dt){if(!K)return;K.t+=dt;const b=K.b;
   drawSpr(c,SPR.kball,MAPS.kball,b.x-10,b.y-12,Math.floor(K.t*6)%2===0,3);
   K.fx.forEach(f=>{c.fillStyle='#ffcd75';c.font='bold 10px "Pixelify Sans",monospace';c.fillText(f.s,f.x,f.y);});
   c.fillStyle='#1a1c2c';c.font='bold 16px "Pixelify Sans",monospace';c.textAlign='center';c.fillText(String(K.score),80,20);c.textAlign='left';
-  if(K.st==='ready'){c.fillStyle='rgba(26,28,44,.6)';c.fillRect(30,46,100,20);c.fillStyle='#ffcd75';c.font='11px "Pixelify Sans",monospace';c.textAlign='center';c.fillText('Başlamak için dokun',80,60);c.textAlign='left';}
+  if(K.st==='ready'){c.fillStyle='rgba(26,28,44,.6)';c.fillRect(30,46,100,20);c.fillStyle='#ffcd75';c.font='11px "Pixelify Sans",monospace';c.textAlign='center';c.fillText(tr('Başlamak için dokun'),80,60);c.textAlign='left';}
 }
 kc.addEventListener('pointerdown',ev=>{if(!K)return;const r=kc.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width*160,y=(ev.clientY-r.top)/r.height*120;const b=K.b;
   if(K.st==='ready'){K.st='play';K.played=true;b.vy=-150;b.vx=(Math.random()-.5)*40;blip(660,.05);return;}
@@ -1216,6 +1251,7 @@ function renderSet(){
   document.getElementById('setBody').innerHTML=`<div class="item"><div class="d"><b>Ses</b></div><button data-s="snd">${S.snd?'Açık':'Kapalı'}</button></div>
   ${NATIVE&&n&&n.notify?`<div class="item"><div class="d"><b>Bildirimler</b><br><small>Dostların acıkınca ya da barınağa nadir biri gelince haber verir.</small></div><button data-s="notif">${S.notif?'Açık':'Kapalı'}</button></div>`:''}
   <div class="item"><div class="d"><b>Reklamsız</b><br><small>${S.noAds?'Aktif. Teşekkürler!':'Ara reklamları kaldırır.'}</small></div><button data-s="noads" ${S.noAds?'disabled':''}>${S.noAds?'Aktif':'Gör'}</button></div>
+  <div class="item"><div class="d"><b>Dil / Language</b></div></div><div class="setrow" data-noi18n>${LANGS.map(([k,n])=>`<button data-lang="${k}" class="${k===LANG?'c4':'dark'}" style="min-width:90px">${n}</button>`).join('')}</div>
   <div class="setrow">${NATIVE?'<button class="dark" data-s="restore">Satın alımları geri yükle</button>':''}<button class="dark" data-flixlegal="legal" data-s="legal">Yasal Bilgiler</button></div>
   ${devOn?`<h3>Test paneli</h3><p class="note" style="margin:0 0 8px">Oyun gerçek saatle akar: tokluk yaklaşık 8 saatte biter, ihmal edilen dost 3 saatte kaçar. Hızlandırma sadece test içindir.</p>
   <div class="dev">${[1,60,600].map(v=>`<button data-sp="${v}" class="${S.speed===v?'on':''}">${v===1?'Gerçek zaman':v+'x'}</button>`).join('')}
@@ -1223,7 +1259,7 @@ function renderSet(){
   ${NATIVE?'':'<button data-s="coins">+500 altın</button><button data-s="gems">+100 elmas</button><button data-s="lvl">+1 seviye</button>'}</div>`:''}
   <h3>Kayıt</h3><div class="dev"><button data-s="reset" class="c2">${resetArm?'Emin misin? Tüm ilerleme silinir. Tekrar bas':'Oyunu sıfırla'}</button></div>
   <div class="ver" data-s="ver">Paty ${VERSION} · Flix Toys</div>`;}
-document.getElementById('setBody').onclick=e=>{const sp=e.target.closest('[data-sp]');if(sp){S.speed=+sp.dataset.sp;renderSet();return;}
+document.getElementById('setBody').onclick=e=>{const lg=e.target.closest('[data-lang]');if(lg){if(lg.dataset.lang!==LANG)setLang(lg.dataset.lang);return;}const sp=e.target.closest('[data-sp]');if(sp){S.speed=+sp.dataset.sp;renderSet();return;}
   const b=e.target.closest('[data-s]');if(!b)return;const a=b.dataset.s;const p=sel();
   if(a==='ver'){if(++devTaps>=7&&!devOn){devOn=true;toast('Test paneli açıldı');}else return;}
   if(a==='snd')S.snd=!S.snd;
@@ -1258,7 +1294,17 @@ function scheduleNotifs(){
 // ---- legal ----
 const LEGAL_URL='https://onatdenizsener.github.io/paty/gizlilik.html';
 function openLegal(){
-  document.getElementById('legalBody').innerHTML=`<h4>Gizlilik Politikası</h4>
+  const lb=document.getElementById('legalBody');
+  if(LANG!=='tr'){lb.setAttribute('data-noi18n','');lb.innerHTML=`<h4>Privacy Policy</h4>
+  <p>Paty is made by Flix Toys. There is no account; we do not ask for personal data such as your name, email or location. Your progress is stored only on your device and is deleted with the app.</p>
+  <p><b>Ads:</b> the app shows Google AdMob ads. AdMob may use data such as the device advertising identifier to serve and measure ads. Permission is asked before ads are personalised; if you decline, ads are not personalised. In the EEA, UK and Switzerland Google's consent form is shown and you can change your choice in Settings > Privacy Options. More: policies.google.com/privacy</p>
+  <p><b>Purchases:</b> in-app purchases are processed by the Apple App Store; your payment details never reach us. "No Ads" can be restored; gems are consumable.</p>
+  <p><b>Notifications:</b> if you allow it, local reminders are shown when your pets are hungry. They are created on your device and never sent to a server.</p>
+  <p><b>Children:</b> the game is suitable for all ages. We do not knowingly collect personal data from children.</p>
+  <h4>Terms of Use</h4><p>Coins, gems and pets are virtual items with no real-money value and cannot be transferred. Purchases are subject to Apple's Standard EULA; refunds are handled by Apple.</p>
+  <h4>Contact</h4><p>flixofficial2025@gmail.com</p><p>Web: <a href="${LEGAL_URL}">${LEGAL_URL}</a></p>`;openM('mLegal');return;}
+  lb.removeAttribute('data-noi18n');
+  lb.innerHTML=`<h4>Gizlilik Politikası</h4>
   <p>Paty, Flix Toys tarafından geliştirilmiştir. Oyunda hesap açılmaz; ad, e-posta, konum gibi kişisel bilgiler istenmez. Oyun ilerlemen yalnızca cihazında saklanır ve oyunu silince kaybolur.</p>
   <p><b>Reklamlar:</b> Uygulamada Google AdMob reklamları gösterilir. AdMob reklam göstermek ve ölçmek için cihaz reklam kimliği gibi verileri kullanabilir. Kişiselleştirilmiş reklamlar için önce izin istenir; izin vermezsen reklamlar kişiselleştirilmeden gösterilir. Avrupa Birliği, İngiltere ve İsviçre'de Google'ın onay penceresi gösterilir ve tercihini Ayarlar > Gizlilik Seçenekleri'nden değiştirebilirsin. Ayrıntı: policies.google.com/privacy</p>
   <p><b>Satın almalar:</b> Uygulama içi satın almalar Apple App Store üzerinden yapılır; ödeme bilgilerin bize ulaşmaz. "Reklamsız" paketi geri yüklenebilir; elmaslar tüketilebilir üründür.</p>
@@ -1293,6 +1339,8 @@ function queueTut(){D.q=[];TUT.forEach((m,i)=>{if(i<S.tut-1)return;say(m.text,Ob
 // ================= BOOT =================
 S=load();
 const titleEl=document.getElementById('title'),bStart=document.getElementById('bStart');
+document.getElementById('titleLangs').innerHTML=LANGS.map(([k,n])=>`<button data-lang="${k}" class="${k===LANG?'c4':'dark'}">${n}</button>`).join('');
+document.getElementById('titleLangs').onclick=e=>{const b=e.target.closest('[data-lang]');if(b&&b.dataset.lang!==LANG)setLang(b.dataset.lang);};
 if(!S){S=fresh();S.startDay=dayIdx();}
 else{
   if(S.startDay===undefined)S.startDay=dayIdx();
@@ -1305,7 +1353,7 @@ function catchUp(){
   if(S.tut>=99&&away>3){S.ev=[];let left=away;while(left>0){const st=Math.min(5,left);simGame(st);left-=st;}const ev=S.ev;delete S.ev;
     S.pets.forEach(p=>{if(alive(p)&&p.state!=='sleep'&&p.state!=='care'){p.goal=null;p.state='idle';p.timer=1;}});
     const needy=S.pets.filter(p=>alive(p)&&(p.hunger<35||p.happy<35||p.clean<30||p.sick)).map(p=>p.name);
-    return `Tekrar hoş geldin! Sen yokken ${fmtH(away)} geçti.`+(ev.length?' Bu arada: '+ev.join(', ')+'.':'')+(needy.length?` ${needy.join(' ve ')} ilgini bekliyor.`:' Herkes iyi görünüyor.');}
+    return tr(`Tekrar hoş geldin! Sen yokken ${fmtH(away)} geçti.`)+(ev.length?' '+tr('Bu arada:')+' '+ev.map(tr).join(', ')+'.':'')+' '+(needy.length?tr(`${needy.join(', ')} ilgini bekliyor.`):tr('Herkes iyi görünüyor.'));}
   S.gm+=away;return null;
 }
 S.pets.forEach(p=>{
@@ -1358,5 +1406,5 @@ document.addEventListener('visibilitychange',()=>{
 // purchases approved before the game was ready, and "No Ads" on a reinstall
 if(NATIVE){const n=NAT();if(n&&n.flush)n.flush();if(S.noAds&&window.FlixAds)window.FlixAds.setAdsRemoved(true);if(n&&n.notify)n.notify.cancel();}
 setTimeout(()=>document.getElementById('splash').classList.add('out'),1300);
-if(!NATIVE)window.__paty={get S(){return S},F,SP,dims};
+if(!NATIVE)window.__paty={get S(){return S},F,SP,dims,MISS,tr};
 })();

@@ -15,7 +15,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 M = json.loads((ROOT / 'appstore' / 'metadata.json').read_text(encoding='utf-8'))
 KID, ISS, KEY = os.environ['ASC_KEY_ID'], os.environ['ASC_ISSUER_ID'], os.environ['ASC_KEY_P8']
 ONLY = set(sys.argv[sys.argv.index('--only') + 1].split(',')) if '--only' in sys.argv else None
-API = 'https://api.appstoreconnect.apple.com'
+API = os.environ.get('ASC_API_BASE', 'https://api.appstoreconnect.apple.com')
 MANUAL = []
 _tok = [None, 0]
 
@@ -188,8 +188,9 @@ def screenshots(app):
     if not v: warn('Ekran görüntüleri', 'düzenlenebilir sürüm yok'); return
     locs = {l['attributes']['locale']: l['id'] for l in get('/v1/appStoreVersions/%s/appStoreVersionLocalizations' % v['id'])['data']}
     shots = ROOT / 'appstore' / 'screenshots'
-    for loc, prefix in (('tr', 'tr'), ('en-US', 'en')):
-        if loc not in locs: continue
+    for loc in M['localizations']:
+        prefix = loc.split('-')[0]
+        if loc not in locs: warn('Ekran görüntüleri', '%s sürüm dili yok, önce version adımı çalışmalı' % loc); continue
         files = sorted(shots.glob('%s_*.png' % prefix))
         sets = get('/v1/appStoreVersionLocalizations/%s/appScreenshotSets' % locs[loc])['data']
         s = next((x for x in sets if x['attributes']['screenshotDisplayType'] == 'APP_IPHONE_67'), None)
@@ -259,7 +260,8 @@ def iaps(app):
                 note('IAP', '%s oluşturuldu (%s)' % (pid, p['type']))
             iid = iap['id']
             locs = {l['attributes']['locale']: l for l in get('/v2/inAppPurchases/%s/inAppPurchaseLocalizations' % iid)['data']}
-            for loc in ('tr', 'en-US'):
+            for loc in M['localizations']:
+                if loc not in p: continue
                 a = {'name': p[loc]['name'], 'description': p[loc]['description']}
                 if loc in locs: patch('/v1/inAppPurchaseLocalizations/%s' % locs[loc]['id'], {'data': {'type': 'inAppPurchaseLocalizations', 'id': locs[loc]['id'], 'attributes': a}})
                 else: post('/v1/inAppPurchaseLocalizations', {'data': {'type': 'inAppPurchaseLocalizations', 'attributes': dict(a, locale=loc), 'relationships': {'inAppPurchaseV2': {'data': {'type': 'inAppPurchases', 'id': iid}}}}})
@@ -269,7 +271,8 @@ def iaps(app):
             except ApiError: sched = None
             if not sched:
                 best = price_point('/v2/inAppPurchases/%s/pricePoints?filter[territory]=TUR&limit=200' % iid, p['priceTRY'])
-                if best:
+                if not best: warn('IAP fiyat', '%s: ₺%.2f ya da üstünde fiyat noktası bulunamadı, fiyatı elle seç' % (pid, p['priceTRY']))
+                else:
                     post('/v1/inAppPurchasePriceSchedules', {'data': {'type': 'inAppPurchasePriceSchedules', 'relationships': {
                         'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': iid}},
                         'baseTerritory': {'data': {'type': 'territories', 'id': 'TUR'}},

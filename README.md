@@ -19,7 +19,7 @@ Retro piksel evcil hayvan oyunu (Flix Toys). Oyuncu barınaktan ilk kedisini ya 
 | `app/tools/ios_setup.py` | iOS projesini hazırlar: dikey, yalnızca iPhone, ikon, AdMob kimliği, ATT metni, SKAdNetwork |
 | `app/tools/ads_audit.py` | Her TestFlight çalıştırmasında hangi reklamların GERÇEK, hangilerinin TEST olduğunu yazar |
 | `app/tools/asc_setup.py` | App Store Connect'i `appstore/metadata.json`'dan doldurur |
-| `appstore/` | Mağaza metinleri (TR + EN), 6,9" ekran görüntüleri, IAP inceleme görseli |
+| `appstore/` | Mağaza metinleri (6 dil), 6,9" ekran görüntüleri (6 dil), IAP inceleme görseli |
 | `gizlilik.html`, `destek.html` | Gizlilik politikası ve destek sayfası (GitHub Pages) |
 
 Derleme: `python3 src/build.py` → `index.html`. Uygulama için `cd app && npm ci && npm run build`.
@@ -85,11 +85,11 @@ Paket kimliği listede yoksa önce 3. adımdaki iş akışını `only=bundle` il
 gh workflow run asc-setup.yml -R onatdenizsener/paty
 ```
 Bu iş akışı şunları doldurur:
-- Ad ve alt başlık (TR + EN)
+- 6 dilde (TR, EN, AR, FR, DE, ES) ad ve alt başlık
 - Kategori: Oyunlar > Simülasyon / Gündelik
 - Yaş derecesi 4+
 - Sürüm 1.0 metinleri: açıklama, anahtar kelimeler, tanıtım metni, destek ve pazarlama linki, telif
-- 6,9" ekran görüntüleri (TR + EN)
+- 6,9" ekran görüntüleri (6 dilde, her dilde 6 adet)
 - İnceleme notu
 - 4 uygulama içi ürün: TR/EN adları, fiyatları, tüm ülkeler, inceleme görseli
 - Uygulama fiyatı: ücretsiz
@@ -129,6 +129,11 @@ Yükleme 15-25 dakika sürer. Build, 10-30 dakika sonra TestFlight'ta görünür
   - app-ads.txt dosyası flixgamestudios.com / flixtoysofficial.com kökünde olmalı.
 - **GitHub Pages:** Settings > Pages > Branch: `main` / root. Gizlilik ve destek linkleri buna bağlı.
 
+## Diller
+Oyun Türkçe (varsayılan), İngilizce, Arapça (sağdan sola), Fransızca, Almanca ve İspanyolca. Dil açılış ekranından ya da Ayarlar > Dil / Language'den seçilir.
+- Çeviriler: `src/i18n_src.txt` (satır başına `Türkçe || English || العربية || Français || Deutsch || Español`; `[patterns]` altında isim ve sayı içeren cümleler). `src/build.py` bunu `src/i18n.js`'e çevirip oyuna gömer.
+- Oyun metni Türkçe yazılır. Çeviri, Flix'in konuşmalarına, bildirimlere, tuval yazılarına ve ekrandaki her yazıya uygulanır. Yeni bir yazı eklersen `i18n_src.txt`'e de ekle. Web'de `window.__paty.MISS` çevrilmemiş yazıları listeler.
+- Mağaza: 6 dilde ad, alt başlık, açıklama, anahtar kelime, IAP adları ve 6'şar dilli ekran görüntüsü (`appstore/screenshots/<dil>_N.png`).
+
 ## Sonraki adımlar
-- Diğer Flix oyunlarındaki gibi oyun içi dil seçeneği: İngilizce, Arapça, Fransızca, Almanca, İspanyolca (varsayılan Türkçe). Şu an oyun yalnızca Türkçe; mağaza metinleri TR + EN.
 - Çatı katı odası.
