@@ -1,0 +1,187 @@
+{
+ "appstore/screenshots/ar_1.png": {
+  "name": "ar_1.png",
+  "size": 315194,
+  "md5": "bc7bf3a9b7a5d3ee2de71dea27fe4c7d"
+ },
+ "appstore/screenshots/ar_2.png": {
+  "name": "ar_2.png",
+  "size": 342057,
+  "md5": "af5771929082f5834165523382df550f"
+ },
+ "appstore/screenshots/ar_3.png": {
+  "name": "ar_3.png",
+  "size": 323226,
+  "md5": "f3828a660af7bc1336ee367a65de1277"
+ },
+ "appstore/screenshots/ar_4.png": {
+  "name": "ar_4.png",
+  "size": 616518,
+  "md5": "07bf51a08750e228d7993ac8d775bb06"
+ },
+ "appstore/screenshots/ar_5.png": {
+  "name": "ar_5.png",
+  "size": 329378,
+  "md5": "f14ed3ca36b8cfd920ac10bd351943dc"
+ },
+ "appstore/screenshots/ar_6.png": {
+  "name": "ar_6.png",
+  "size": 273992,
+  "md5": "83d584e5c37131b8eed007652ea6e136"
+ },
+ "appstore/screenshots/de_1.png": {
+  "name": "de_1.png",
+  "size": 267777,
+  "md5": "e1fcac466ddd96adda2ae836e3575559"
+ },
+ "appstore/screenshots/de_2.png": {
+  "name": "de_2.png",
+  "size": 281181,
+  "md5": "b2916a08c17c1678a714fc7963944d7e"
+ },
+ "appstore/screenshots/de_3.png": {
+  "name": "de_3.png",
+  "size": 278406,
+  "md5": "1958d9c0e4b25e36c7597304ae613417"
+ },
+ "appstore/screenshots/de_4.png": {
+  "name": "de_4.png",
+  "size": 526993,
+  "md5": "ba17d8c7f67cd8db65aa79e05c989f9c"
+ },
+ "appstore/screenshots/de_5.png": {
+  "name": "de_5.png",
+  "size": 271466,
+  "md5": "01f97c4c6f43f1fc6c42f9796e79e942"
+ },
+ "appstore/screenshots/de_6.png": {
+  "name": "de_6.png",
+  "size": 225531,
+  "md5": "2ae890f5f6678145ef5e53533b0db72a"
+ },
+ "appstore/screenshots/en_1.png": {
+  "name": "en_1.png",
+  "size": 261900,
+  "md5": "7186e824f5395f928f4a435c762cf782"
+ },
+ "appstore/screenshots/en_2.png": {
+  "name": "en_2.png",
+  "size": 274575,
+  "md5": "bfd8c760b3b09f981e86423a644437cb"
+ },
+ "appstore/screenshots/en_3.png": {
+  "name": "en_3.png",
+  "size": 269048,
+  "md5": "25c110a033860a8a8ea541e2e97e0237"
+ },
+ "appstore/screenshots/en_4.png": {
+  "name": "en_4.png",
+  "size": 501164,
+  "md5": "30e26dff30cf1041a8dc1dc8de4ac52c"
+ },
+ "appstore/screenshots/en_5.png": {
+  "name": "en_5.png",
+  "size": 268968,
+  "md5": "cf08460180a65acf70e33232b0a883a8"
+ },
+ "appstore/screenshots/en_6.png": {
+  "name": "en_6.png",
+  "size": 223341,
+  "md5": "ad115d8d6f12006aa6c67778c5a54ff1"
+ },
+ "appstore/screenshots/es_1.png": {
+  "name": "es_1.png",
+  "size": 260798,
+  "md5": "4bcfbcd22fc42b9ee7329360b29b2ecb"
+ },
+ "appstore/screenshots/es_2.png": {
+  "name": "es_2.png",
+  "size": 270793,
+  "md5": "49e43e98b095e8193275f70abf5098af"
+ },
+ "appstore/screenshots/es_3.png": {
+  "name": "es_3.png",
+  "size": 274241,
+  "md5": "886895db9871437cc7768e9ab54b3796"
+ },
+ "appstore/screenshots/es_4.png": {
+  "name": "es_4.png",
+  "size": 511639,
+  "md5": "100152edf1ab0dc0b06e7f97c4e30b64"
+ },
+ "appstore/screenshots/es_5.png": {
+  "name": "es_5.png",
+  "size": 270419,
+  "md5": "8e73d8f5970bd8b86082e589f83352b2"
+ },
+ "appstore/screenshots/es_6.png": {
+  "name": "es_6.png",
+  "size": 229347,
+  "md5": "b6900277d85f7ca97715fcd397983c83"
+ },
+ "appstore/screenshots/fr_1.png": {
+  "name": "fr_1.png",
+  "size": 267371,
+  "md5": "beb3b215a862236e2c26df87dac8f3e6"
+ },
+ "appstore/screenshots/fr_2.png": {
+  "name": "fr_2.png",
+  "size": 274182,
+  "md5": "7565d5a9b6580ed949f980e60e2648be"
+ },
+ "appstore/screenshots/fr_3.png": {
+  "name": "fr_3.png",
+  "size": 265851,
+  "md5": "5e19369b8e5b4187342f4a8685afdd8a"
+ },
+ "appstore/screenshots/fr_4.png": {
+  "name": "fr_4.png",
+  "size": 498217,
+  "md5": "e138f7edda09b647a18085e3c88bfa34"
+ },
+ "appstore/screenshots/fr_5.png": {
+  "name": "fr_5.png",
+  "size": 269657,
+  "md5": "90e79e6fe7d342fc1a72bda3d6bf42cf"
+ },
+ "appstore/screenshots/fr_6.png": {
+  "name": "fr_6.png",
+  "size": 222353,
+  "md5": "c165facd13e078241b8823829c541f3c"
+ },
+ "appstore/screenshots/tr_1.png": {
+  "name": "tr_1.png",
+  "size": 260895,
+  "md5": "71d0f4146834a8c2e55529baa8433f76"
+ },
+ "appstore/screenshots/tr_2.png": {
+  "name": "tr_2.png",
+  "size": 275871,
+  "md5": "95871775fe9b8099acd765bea239509f"
+ },
+ "appstore/screenshots/tr_3.png": {
+  "name": "tr_3.png",
+  "size": 265471,
+  "md5": "2d6b97d6f58fe9a0048524af8239662c"
+ },
+ "appstore/screenshots/tr_4.png": {
+  "name": "tr_4.png",
+  "size": 505121,
+  "md5": "3885e4e461d3860c8af7b9db7150e7c2"
+ },
+ "appstore/screenshots/tr_5.png": {
+  "name": "tr_5.png",
+  "size": 272654,
+  "md5": "657daf43a23faf12ee042df8b434256f"
+ },
+ "appstore/screenshots/tr_6.png": {
+  "name": "tr_6.png",
+  "size": 217354,
+  "md5": "a04c1b4e1e90065db94287bc9ef6226b"
+ },
+ "appstore/iap_review.png": {
+  "name": "iap_review.png",
+  "size": 217269,
+  "md5": "d70dfe4dfd7a2d201b5c6c5c8fcbafcf"
+ }
+}
