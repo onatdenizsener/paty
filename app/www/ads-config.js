@@ -12,9 +12,9 @@
 window.FLIX_ADS_CONFIG = {
   forceTestAds: false,
   ids: {
-    IOS_APP_ID: '',          // ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX (with ~)
-    IOS_REWARDED: '',        // ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX (with /)
-    IOS_INTERSTITIAL: '',
+    IOS_APP_ID: 'ca-app-pub-9939733946730095~2924028181',          // ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX (with ~)
+    IOS_REWARDED: 'ca-app-pub-9939733946730095/1391454661',        // ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX (with /)
+    IOS_INTERSTITIAL: 'ca-app-pub-9939733946730095/6237633416',
     IOS_BANNER: '',
     ANDROID_REWARDED: '',
     ANDROID_INTERSTITIAL: '',
